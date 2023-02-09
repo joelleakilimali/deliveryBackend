@@ -1,6 +1,8 @@
 const Basket = require("../models/basket");
 const mongoose = require("mongoose");
 const Product = require("../models/product");
+const Order = require("../models/order");
+const user = require("../models/user");
 
 exports.Baskets_get_all = async (req, res, next) => {
   Basket.find()
@@ -78,4 +80,35 @@ exports.Basket_delete = async (req, res, next) => {
     .catch((err) => {
       res.status(500).json({ error: err });
     });
+};
+
+exports.getBasketByUser = async (req, res, next) => {
+  const theUser = user.findById({ _id: req.params.userId });
+  if (!theUser) {
+    console.log(theUser);
+    return res
+      .status(404)
+      .json({ message: "there is no basket for this user" });
+  } else {
+    Order.find({ User: req.params.userId })
+      .select("_id product quatity isPaid quantity")
+      .populate("product", "name , price ")
+      .exec()
+      .then((docs) => {
+        if (docs) {
+          const orders = docs;
+          res.status(201).json({
+            message: "orders fetched",
+            count: orders.length,
+            orders: orders.map((doc) => {
+              return {
+                product: doc.product,
+                price: doc.price,
+                quantity: doc.quantity,
+              };
+            }),
+          });
+        }
+      });
+  }
 };

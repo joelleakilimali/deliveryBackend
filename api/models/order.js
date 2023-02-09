@@ -7,10 +7,14 @@ const orderSchema = mongoose.Schema({
     ref: "Product",
     required: true,
   },
+
+  user: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User",
+    required: true,
+  },
   quantity: { type: Number, default: 1 },
-  products: [
-    { type: mongoose.Schema.Types.ObjectId, ref: "Basket", required: false },
-  ],
+  isPaid: { type: Boolean, default: false },
 });
 
 module.exports = mongoose.model("Order", orderSchema);

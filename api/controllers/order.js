@@ -4,7 +4,7 @@ const Product = require("../models/product");
 
 exports.orders_get_all = async (req, res, next) => {
   Order.find()
-    .select("_id product quatity")
+    .select("_id product quatity isPaid quantity")
     .populate("product", "name _id")
     .exec()
     .then((docs) => {
@@ -17,6 +17,8 @@ exports.orders_get_all = async (req, res, next) => {
             return {
               _id: doc._id,
               product: doc.product,
+              quantity: doc.quantity,
+              isPaid: doc.isPaid,
               quantity: doc.quantity,
               request: {
                 type: "Get",
@@ -33,7 +35,7 @@ exports.orders_get_all = async (req, res, next) => {
     });
 };
 exports.order_create = async (req, res, next) => {
-  Product.findById(req.body.productId)
+  Product.findById(req.body.products)
     .exec()
     .then((product) => {
       if (!product) {
@@ -42,7 +44,8 @@ exports.order_create = async (req, res, next) => {
       const order = new Order({
         _id: mongoose.Types.ObjectId(),
         quantity: req.body.quantity,
-        product: req.body.productId,
+        product: req.body.products,
+        user: req.body.user,
       });
       return order
         .save()

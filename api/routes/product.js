@@ -52,4 +52,11 @@ router.post(
   productController.product_created
 );
 
+/**
+ * @method : Get
+ * @description: get products by categories
+ * @url : http://localhost:3001/products/categories
+ */
+router.post("/cat", productController.product_getBycategory);
+
 module.exports = router;

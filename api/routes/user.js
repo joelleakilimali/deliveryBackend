@@ -18,8 +18,8 @@ router.post("/", (req, res, next) => {
         const user = new User({
           _id: new mongoose.Types.ObjectId(),
           email: req.body.email,
-          telephone: req.telephone.email,
-          noms: req.noms.email,
+          telephone: req.body.telephone,
+          noms: req.body.noms,
           prenom: req.body.prenom,
           adresse: req.body.adresse,
           password: bcrypt.hashSync(req.body.password, 8),
@@ -58,30 +58,35 @@ router.post("/login", (req, res, next) => {
         return res.status(401).json({ error: "Auth failed " });
       }
 
-      bcrypt.compare(req.body.password, user.password, (mist, result) => {
-        if (mist) {
-          console.log("failed");
-          return res.status(401).json({ error: "Auth failed " });
-        } else if (result) {
-          const token = jwt.sign(
-            {
-              email: user.email,
-              _id: user._id,
-            },
-            process.env.TOKEN,
-            {
-              expiresIn: "1h",
-            }
-          );
+      //
 
-          return res
-            .status(200)
-            .json({ message: "login successfuly", token: token });
+      //
+
+      bcrypt.compare(req.body.password, user.password, (err, result) => {
+        if (err) {
+          console.log("mistake", err);
         }
+        if (!result) {
+          return res.status(401).json({ message: "Auth failed " });
+        }
+        const token = jwt.sign(
+          {
+            email: user.email,
+            _id: user._id,
+          },
+          process.env.TOKEN,
+          {
+            expiresIn: "1h",
+          }
+        );
+
+        return res
+          .status(200)
+          .json({ message: "login successfuly", token: token });
       });
     })
     .catch((err) => {
-      return res.status(400).json({ error: err });
+      return res.status(400).json({ message: err });
     });
 });
 

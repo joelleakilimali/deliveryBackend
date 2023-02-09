@@ -32,7 +32,18 @@ app.use((req, res, next) => {
     "Origin,X-requested-with,Content-Type,Accept,Authorization"
   );
   if (req.method === "OPTIONS") {
-    res.header("Access-Control-Allow-Methods", "GET,POST,PUT,PATCH,DELETE");
+    res.header(
+      "Access-Control-Allow-Methods",
+      "*",
+      "GET,POST,PUT,PATCH,DELETE"
+    );
+    res.setHeader("Access-Control-Allow-Origin", "*");
+    res.setHeader("Access-Control-Allow-Methods", "GET,POST,PUT,PATCH,DELETE");
+    res.setHeader(
+      "Access-Control-Allow-Methods",
+      "Content-Type",
+      "Authorization"
+    );
     return res.status(200).json({});
   }
   next();
@@ -42,7 +53,7 @@ app.use((req, res, next) => {
 app.use("/products", productRoutes);
 app.use("/orders", orderRoutes);
 app.use("/users", userRoutes);
-app.use("/basket", basketRoutes);
+app.use("/baskets", basketRoutes);
 
 //if we enter a route that is not valid it will come here (1)
 app.use((req, res, next) => {

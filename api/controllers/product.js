@@ -3,7 +3,38 @@ const mongoose = require("mongoose");
 
 exports.product_get_all = async (req, res, next) => {
   Product.find()
-    .select(" name price _id")
+    .select(" name price _id category")
+    .exec()
+    .then((docs) => {
+      if (docs) {
+        const response = {
+          count: docs.length,
+          products: docs.map((doc) => {
+            return {
+              name: doc.name,
+              price: doc.price,
+              category: doc.category,
+              _id: doc._id,
+              request: {
+                type: "Get",
+                url: "http://localhost:3001/products/" + doc.id,
+              },
+            };
+          }),
+        };
+        res.status(200).json(response);
+      }
+    })
+    .catch((err) => {
+      console.log(err);
+      res.status(404).json({ message: err });
+    });
+};
+exports.product_getBycategory = async (req, res) => {
+  console.log("here");
+  const productCategory = req.body.categories;
+  Product.find({ category: productCategory })
+    .select("name price _id")
     .exec()
     .then((docs) => {
       if (docs) {
@@ -23,10 +54,6 @@ exports.product_get_all = async (req, res, next) => {
         };
         res.status(200).json(response);
       }
-    })
-    .catch((err) => {
-      console.log(err);
-      res.status(404).json({ message: err });
     });
 };
 
@@ -89,6 +116,7 @@ exports.product_created = async (req, res, next) => {
     _id: new mongoose.Types.ObjectId(),
     name: req.body.name,
     price: req.body.price,
+    category: req.body.category,
   });
   product
     .save()
