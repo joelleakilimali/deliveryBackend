@@ -3,6 +3,7 @@ const mongoose = require("mongoose");
 const Product = require("../models/product");
 
 exports.orders_get_all = async (req, res, next) => {
+  console.log("loading");
   Order.find()
     .select("_id product quatity isPaid quantity")
     .populate("product", "name _id")

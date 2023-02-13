@@ -5,10 +5,13 @@ const productSchema = mongoose.Schema({
 
   name: { type: String, required: true },
   price: { type: Number, required: true },
+  productImage: { type: String, required: true },
+  dateExp: { type: String, required: true },
+
   category: {
     type: String,
     required: false,
-    enum: ["ELECTRONIC", "Boisson", "FOOD", "OTHER"],
+    enum: ["ELECTRONIC", "Boisson", "FOOD", "Perfum", "OTHER", "Detergent"],
     dfault: "Food",
   },
   status: {

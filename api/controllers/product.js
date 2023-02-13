@@ -3,17 +3,19 @@ const mongoose = require("mongoose");
 
 exports.product_get_all = async (req, res, next) => {
   Product.find()
-    .select(" name price _id category")
+    .select(" name price _id category productImage")
     .exec()
     .then((docs) => {
       if (docs) {
         const response = {
           count: docs.length,
+
           products: docs.map((doc) => {
             return {
               name: doc.name,
               price: doc.price,
               category: doc.category,
+              image: doc.productImage,
               _id: doc._id,
               request: {
                 type: "Get",
@@ -117,6 +119,8 @@ exports.product_created = async (req, res, next) => {
     name: req.body.name,
     price: req.body.price,
     category: req.body.category,
+    productImage: req.body.image,
+    dateExp: req.body.dateExp,
   });
   product
     .save()
@@ -127,6 +131,7 @@ exports.product_created = async (req, res, next) => {
         createdProduct: {
           name: result.name,
           price: result.price,
+          productImage: result.image,
           _id: result._id,
           request: {
             type: "Post",
