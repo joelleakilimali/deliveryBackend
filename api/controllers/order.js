@@ -3,10 +3,9 @@ const mongoose = require("mongoose");
 const Product = require("../models/product");
 
 exports.orders_get_all = async (req, res, next) => {
-  console.log("loading");
   Order.find()
     .select("_id product quatity isPaid quantity")
-    .populate("product", "name _id")
+    .populate("product", "name _id  price ")
     .exec()
     .then((docs) => {
       if (docs) {
@@ -21,6 +20,7 @@ exports.orders_get_all = async (req, res, next) => {
               quantity: doc.quantity,
               isPaid: doc.isPaid,
               quantity: doc.quantity,
+              price: doc.price,
               request: {
                 type: "Get",
                 url: "http://localhost:3001/orders/" + doc._id,
@@ -35,13 +35,41 @@ exports.orders_get_all = async (req, res, next) => {
       res.status(500).json({ error: err });
     });
 };
+exports.createOrder = async (req, res, next) => {
+  //console.log(req.file);
+  const order = new Order({
+    _id: mongoose.Types.ObjectId(),
+    quantity: req.body.quantity,
+    product: req.body.products,
+    user: req.body.user,
+  });
+  order
+    .save()
+    .then((result) => {
+      console.log(result);
+      res.status(200).json({
+        message: "order added to the basket",
+        createdOrder: {
+          product: result.product,
+          quantity: result.quantity,
+          _id: result._id,
+        },
+      });
+    })
+    .catch((err) => {
+      console.log(err);
+
+      res.status(500).json({ error: err });
+    });
+};
+
 exports.order_create = async (req, res, next) => {
   Product.findById(req.body.products)
     .exec()
     .then((product) => {
-      if (!product) {
-        res.status(500).json({ message: "there is no this product" });
-      }
+      //   if (!product) {
+      //    res.status(500).json({ message: "there is no this product" });
+      //  }
       const order = new Order({
         _id: mongoose.Types.ObjectId(),
         quantity: req.body.quantity,
@@ -88,6 +116,7 @@ exports.order_by_id = async (req, res, next) => {
 };
 
 exports.order_delete = async (req, res, next) => {
+  console.log("----->", req.params.orderId);
   Order.remove({ _id: req.params.orderId })
     .exec()
     .then((result) => {

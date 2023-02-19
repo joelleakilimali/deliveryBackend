@@ -17,7 +17,7 @@ router.get("/", ordersController.orders_get_all);
  * @url : http://localhost:3001/orders/
  */
 
-router.post("/", ordersController.order_create);
+router.post("/", ordersController.createOrder);
 
 /**
  * @method: GET
@@ -37,5 +37,5 @@ router.patch("/:ordertId", (req, res, next) => {
  * @url : http://localhost:3001/orders/:orderId
  */
 
-router.delete("/:orderId", ordersController.order_delete);
+router.post("/:orderId", ordersController.order_delete);
 module.exports = router;
