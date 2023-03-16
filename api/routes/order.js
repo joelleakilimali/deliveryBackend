@@ -12,6 +12,14 @@ const ordersController = require("../controllers/order");
 router.get("/", ordersController.orders_get_all);
 
 /**
+ * @method: GET
+ * @description: get all the orders for a user
+ * @url : http://localhost:3001/orders/
+ */
+
+router.post("/:userId", ordersController.orders_get_all_user);
+
+/**
  * @method: Post
  * @description: create an orders
  * @url : http://localhost:3001/orders/
@@ -37,5 +45,5 @@ router.patch("/:ordertId", (req, res, next) => {
  * @url : http://localhost:3001/orders/:orderId
  */
 
-router.post("/:orderId", ordersController.order_delete);
+router.delete("/:orderId", ordersController.order_delete);
 module.exports = router;

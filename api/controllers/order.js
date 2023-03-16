@@ -35,6 +35,44 @@ exports.orders_get_all = async (req, res, next) => {
       res.status(500).json({ error: err });
     });
 };
+// get orders from a specific user
+exports.orders_get_all_user = async (req, res, next) => {
+  const userid = req.params.userId;
+  console.log("-->", userid);
+  Order.find({ user: userid })
+    .select("_id product quatity isPaid quantity")
+    .populate("product", "name _id  price ")
+    .exec()
+    .then((docs) => {
+      if (docs) {
+        const orders = docs;
+        res.status(201).json({
+          message: "orders fetched",
+          count: orders.length,
+          orders: orders.map((doc) => {
+            return {
+              _id: doc._id,
+              product: doc.product,
+              quantity: doc.quantity,
+              isPaid: doc.isPaid,
+              quantity: doc.quantity,
+              price: doc.price,
+              request: {
+                type: "Get",
+                url: "http://localhost:3001/orders/" + doc._id,
+              },
+            };
+          }),
+        });
+      }
+    })
+
+    .catch((err) => {
+      res.status(500).json({ error: err });
+    });
+};
+
+//
 exports.createOrder = async (req, res, next) => {
   //console.log(req.file);
   const order = new Order({
