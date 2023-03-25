@@ -6,6 +6,7 @@ const Basket = require("../controllers/basket");
 const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+const checkauth = require("../middleware/checkauth");
 
 router.post("/", (req, res, next) => {
   User.findOne({ email: req.body.email })
@@ -82,7 +83,7 @@ router.post("/login", (req, res, next) => {
 
         return res
           .status(200)
-          .json({ message: "login successfuly", token: token });
+          .json({ message: "login successfuly", token: token, user });
       });
     })
     .catch((err) => {

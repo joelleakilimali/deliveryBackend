@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const ordersController = require("../controllers/order");
+const checkauth = require("../middleware/checkauth");
 //const checkAuth = require("../middleware/checkauth");
 
 /**
@@ -9,7 +10,7 @@ const ordersController = require("../controllers/order");
  * @url : http://localhost:3001/orders/
  */
 
-router.get("/", ordersController.orders_get_all);
+router.get("/", checkauth, ordersController.orders_get_all);
 
 /**
  * @method: GET
