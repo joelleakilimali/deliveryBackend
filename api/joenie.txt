@@ -186,5 +186,20 @@ response{
 }
 
 -/markets [GET]
+response:[{maretSchema}]
 
+-/markets/:marketId [GET]
 response:{maretSchema}
+
+
+-/admin/market   [PATCH]  (guarded)
+
+payload{
+    name?:string,
+    image?:file,
+    slogan?:string
+    phoneNumber?:string,
+    email?;string
+}
+response:{marketchema}
+
