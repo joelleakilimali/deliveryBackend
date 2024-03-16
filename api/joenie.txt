@@ -199,7 +199,7 @@ payload{
     image?:file,
     slogan?:string
     phoneNumber?:string,
-    email?;string
+    email?;string;
 }
 response:{marketchema}
 
