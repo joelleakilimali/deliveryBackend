@@ -1,14 +1,15 @@
-const mongoose = require("mongoose");
+import mongoose from 'mongoose';
+
 const { Schema } = mongoose;
 
-const marketchema = new Schema(
+const marketSchema = new Schema(
   {
     shortId: String,
     name: { type: String, required: true },
     imageUrl: String,
     slogan: {
       type: String,
-      default: "",
+      default: '',
     },
     phoneNumber: { type: String, required: false },
     email: { type: String, required: false },
@@ -16,6 +17,7 @@ const marketchema = new Schema(
 
   {
     timestamps: true,
-  }
+  },
 );
-module.exports = mongoose.model("Market", marketchema);
+
+export const Market = mongoose.model('Market', marketSchema);

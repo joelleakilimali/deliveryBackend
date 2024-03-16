@@ -1,20 +1,19 @@
-const express = require("express");
+import express from 'express';
+import User from '../models/user';
+import Basket from '../controllers/basket';
+import mongoose from 'mongoose';
+import bcrypt from 'bcrypt';
+import jwt from 'jsonwebtoken';
+import checkauth from '../middleware/checkauth';
+
 const router = express.Router();
-const User = require("../models/user");
-const Basket = require("../controllers/basket");
-
-const mongoose = require("mongoose");
-const bcrypt = require("bcrypt");
-const jwt = require("jsonwebtoken");
-const checkauth = require("../middleware/checkauth");
-
-router.post("/", (req, res, next) => {
+router.post('/', (req, res, next) => {
   User.findOne({ email: req.body.email })
     .exec()
     .then((user) => {
       if (user) {
-        console.log("this email adress exist ");
-        return res.status(409).json({ message: "Email adress already used" });
+        console.log('this email adress exist ');
+        return res.status(409).json({ message: 'Email adress already used' });
       } else {
         const user = new User({
           _id: new mongoose.Types.ObjectId(),
@@ -30,15 +29,15 @@ router.post("/", (req, res, next) => {
           .save()
           .then((result) => {
             res.status(200).json({
-              message: "User created ",
+              message: 'User created ',
               newUser: {
                 password: result.password,
                 email: result.email,
                 _id: result._id,
               },
               request: {
-                type: "Get",
-                url: "http://localhost:3001/user/" + result._id,
+                type: 'Get',
+                url: 'http://localhost:3001/user/' + result._id,
               },
             });
           })
@@ -46,17 +45,17 @@ router.post("/", (req, res, next) => {
             res.status(500).json({ error: err });
           });
         const theUser = User.findOne({ email: req.body.email });
-        console.log("id :", theUser.id);
+        console.log('id :', theUser.id);
       }
     });
 });
 
-router.post("/login", (req, res, next) => {
+router.post('/login', (req, res, next) => {
   User.findOne({ email: req.body.email })
     .exec()
     .then((user) => {
       if (!user) {
-        return res.status(401).json({ error: "Auth failed " });
+        return res.status(401).json({ error: 'Auth failed ' });
       }
 
       //
@@ -65,10 +64,10 @@ router.post("/login", (req, res, next) => {
 
       bcrypt.compare(req.body.password, user.password, (err, result) => {
         if (err) {
-          console.log("mistake", err);
+          console.log('mistake', err);
         }
         if (!result) {
-          return res.status(401).json({ message: "Auth failed " });
+          return res.status(401).json({ message: 'Auth failed ' });
         }
         const token = jwt.sign(
           {
@@ -77,13 +76,13 @@ router.post("/login", (req, res, next) => {
           },
           process.env.TOKEN,
           {
-            expiresIn: "1h",
-          }
+            expiresIn: '1h',
+          },
         );
 
         return res
           .status(200)
-          .json({ message: "login successfuly", token: token, user });
+          .json({ message: 'login successfuly', token: token, user });
       });
     })
     .catch((err) => {
@@ -91,17 +90,17 @@ router.post("/login", (req, res, next) => {
     });
 });
 
-router.delete("/:userId", (req, res, next) => {
+router.delete('/:userId', (req, res, next) => {
   User.remove({ _id: req.params.id })
     .exec()
     .then((result) => {
-      res.status(200).json({ message: "user deleted" });
+      res.status(200).json({ message: 'user deleted' });
     })
     .catch((err) => {
       res.status(400).json({ error: err });
     });
 });
-router.get("/", (req, res, next) => {
+router.get('/', (req, res, next) => {
   User.find()
     .exec()
     .then((users) => {
@@ -111,7 +110,7 @@ router.get("/", (req, res, next) => {
       res.status(400).json({ error: err });
     });
 });
-router.get("/:id", (req, res, next) => {
+router.get('/:id', (req, res, next) => {
   User.findById(req.params.id)
     .exec()
     .then((users) => {
