@@ -1,6 +1,7 @@
 const Order = require("../models/order");
 const mongoose = require("mongoose");
 const Product = require("../models/product");
+const basket = require("../models/basket");
 
 exports.orders_get_all = async (req, res, next) => {
   Order.find()
@@ -162,5 +163,53 @@ exports.order_delete = async (req, res, next) => {
     })
     .catch((err) => {
       res.status(500).json({ error: err });
+    });
+};
+
+exports.orderUptdated = async (req, res, next) => {
+  const id = req.params.orderId;
+  Order.findByIdAndUpdate({ _id: id }, { $set: { isDesired: false } })
+    .exec()
+    .then((result) => {
+      res.status(200).json({
+        message: "this order is not desire anymore",
+      });
+    })
+    .catch((err) => {
+      console.log(err);
+      res.status(404).json({ error: err });
+    });
+};
+
+exports.makeOrder = async (req, res, next) => {
+  const { userId, body } = req.body;
+  console.log("server side", userId);
+  console.log(body.products);
+
+  const order = new Order({
+    _id: mongoose.Types.ObjectId(),
+    products: body.products,
+    user: userId,
+    paid: true,
+    totalPrice: 0,
+    isCancel: false,
+  });
+  return order
+    .save()
+    .then((result) => {
+      console.log(result);
+      res.status(201).json({
+        message: "order stored",
+        newOrder: {
+          products: result.products,
+          totalPrice: result.totalPrice,
+          isPaid: result.paid,
+          isCancel: result.isCancel,
+          _id: result._id,
+        },
+      });
+    })
+    .catch((err) => {
+      res.status(500).json({ message: "something went wrong ", error: err });
     });
 };

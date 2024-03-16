@@ -1,24 +1,20 @@
 const mongoose = require("mongoose");
-const productSchema = mongoose.Schema({
-  _id: mongoose.Schema.Types.ObjectId,
-  shop: { type: mongoose.Schema.Types.ObjectId, ref: "Shop" },
-
-  name: { type: String, required: true },
-  price: { type: Number, required: true },
-  productImage: { type: String, required: true },
-  dateExp: { type: String, required: true },
-
-  category: {
-    type: String,
-    required: false,
-    enum: ["ELECTRONIC", "Boisson", "FOOD", "Perfum", "OTHER", "Detergent"],
-    dfault: "Food",
+const productSchema = mongoose.Schema(
+  {
+    _id: mongoose.Schema.Types.ObjectId,
+    name: String,
+    price: Number,
+    categoryId: { type: mongoose.Schema.Types.ObjectId, ref: "Category" },
+    imageUrl: String,
+    quantity: {
+      type: Number,
+      default: 0,
+    },
+    isAvailable: Boolean,
   },
-  status: {
-    type: String,
-    required: false,
-    enum: ["AVAILABLE", "OUT_OF_STOCK"],
-    default: "AVAILABLE",
-  },
-});
+  {
+    timestamps: true,
+  }
+);
 module.exports = mongoose.model("Product", productSchema);
+module.exports.productSchema = productSchema;

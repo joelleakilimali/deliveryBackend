@@ -1,11 +1,10 @@
 const mongoose = require("mongoose");
 
-const userSchema = mongoose.Schema(
+const adminSchema = mongoose.Schema(
   {
     _id: mongoose.Types.ObjectId,
     firstName: String,
     lastName: String,
-    phone: { type: String },
     email: {
       type: String,
       required: true,
@@ -14,10 +13,15 @@ const userSchema = mongoose.Schema(
         /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/,
     },
     password: { type: String, required: true },
-    address: { type: String },
+    marketId: String,
+    role: {
+      type: String,
+      enum: ["Admin", "Delivery"],
+      default: "Admin",
+    },
   },
   {
     timestamps: true,
   }
 );
-module.exports = mongoose.model("User", userSchema);
+module.exports = mongoose.model("Admin", adminSchema);

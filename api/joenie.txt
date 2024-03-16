@@ -1,0 +1,190 @@
+Auth
+- /auth/user/login [POST]
+payload: {
+    email: string;
+    password: string;
+}
+response: {
+    email: string;
+    userId: string;
+    lastPasswordChanged: Date | null;
+    token: string;
+}
+
+- /auth/user/register [POST]
+payload: {
+    firstName: string;
+    lastName: string;
+    email: string;
+    password: string;
+}
+response: {
+    email: string;
+    userId: string;
+    lastPasswordChanged: Date | null;
+    token: string;
+}
+
+- /auth/admin/login [POST]
+payload: {
+    email: string;
+    password: string;
+}
+response: {
+    email: string;
+    userId: string;
+    lastPasswordChanged: Date | null;
+    token: string;
+}
+
+- /auth/user/change-password [PATCH] (guarded)
+payload: {
+    password: string;
+    newPassword: string;
+}
+response:{
+     email: string;
+    userId: string;
+    lastPasswordChanged: Date | null;
+    token: string;
+}
+- /auth/user/forgot-password [POST] 
+payload:{
+    email:string
+}
+ 
+-/user/order/addItemToCart [POST] (guarded)
+payload:{
+    marketId:string,
+    items:{
+        name:string,
+        price:number,
+        quantity:number,
+        _id: string 
+        categoryId:string
+    },
+}
+response:{
+    userId:string,
+    basket[
+        products[
+            {maretid:string,
+             items:[orderid]
+            }
+        ]
+    ]
+}
+
+-/user/order/updateItemCart[PATCH] (guarded)
+payload:{
+    product:{
+        newuQuantity:number,
+        productId:string 
+        categoryId:string 
+        productId:string   
+    }
+response:{
+      product:{
+        newuQuantity:number,
+        productId:string 
+        categoryId:string    
+    }
+}
+
+}
+
+-/user/order/deleteItemCart[DELETE] (guarded)
+payload:{
+    productId:string 
+    categoryId:string
+     userId:string
+}
+
+-/user/orders [POST] (guarded)
+payload:{
+    items[{
+        _id:string,
+        name:string,
+        quantity:number,
+        price:number
+    },
+    ]
+    marketId:string
+}
+response:{
+    orderSchema
+}
+
+-/user/orders/  [GET] (guarded)
+response{
+    [orderSchema]
+}
+
+-/user/orders/:orderId  [DELETE] (guarded)
+
+
+
+-/admin/orders [GET] (guarded , supportFilter)
+
+response{
+    [orderSchema]
+}
+
+-/admin/products [POST] (guarded)
+payload:{
+    name:string,
+    price:number,
+    categoryId:string,
+    image:file,
+    isAvailable:boolean
+}
+response:{
+ productSchema
+}
+
+-/admin/products/:productId [PATCH] (guarded)
+payload:{
+   name?:string,
+    price?:number,
+    categoryId?:string,
+    image?:file,
+    isAvailable?:boolean
+}
+response:{
+ productSchema
+}
+
+- /admin/products/:productId [DELETE] (guarded)
+
+-/admin/categories [POST] (guarded)
+payload:{
+    name:string,
+    marketId:string,
+    image:file
+}
+response:{
+    categorySchem
+}
+
+-/admin/categories/:id  [DELETE] (guarded)
+
+-/admin/categories/:id   [PATCH]  (guarded)
+payload{
+    name?:string,
+    marketId?:string,
+    image?:file
+}
+
+-/products [GET] (supportFilter)
+response{
+    [productSchema]
+}
+
+-/category [GET]  (supportFilter)
+response{
+    [categorySchema]
+}
+
+-/markets [GET]
+
+response:{maretSchema}
