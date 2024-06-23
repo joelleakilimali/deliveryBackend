@@ -9,6 +9,6 @@ function getEnvVar(name: string) {
 
 export const CONFIG = {
   MONGODB_URL: getEnvVar('MONGODB_URL'),
-  PORT: getEnvVar('PORT'),
+  PORT: getEnvVar('PORT') ?? '8080',
   JWT_SECRET: getEnvVar('JWT_SECRET'),
 };

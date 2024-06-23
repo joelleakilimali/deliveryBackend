@@ -1,27 +1,25 @@
-const express = require("express");
-const router = express.Router();
-const mongoose = require("mongoose");
+import express from 'express';
+
 //const product = require("../models/product");
 //const Product = require("../models/product");
-const multer = require("multer");
-const upload = multer({ dest: "uploads/" });
-const checkAuth = require("../middleware/checkauth");
-const productController = require("../controllers/product");
+import multer from 'multer';
 
+export const productRouter = express.Router();
+const upload = multer({ dest: 'uploads/' });
 /**
  * @method: GET
  * @description: get all the products
  * @url : http://localhost:3001/products/
  */
 
-router.get("/", productController.product_get_all);
+// router.get("/", productController.product_get_all);
 
 /**
  * @method: GET
  * @description: Getting a specific products
  * @url : http://localhost:3001/products/
  */
-router.get("/:productId", productController.product_get_by_id);
+// router.get('/:productId', productController.product_get_by_id);
 
 /**
  * @method: Patch
@@ -29,7 +27,7 @@ router.get("/:productId", productController.product_get_by_id);
  * @url : http://localhost:3001/products/:productId
  */
 
-router.patch("/:productId", productController.product_updated);
+// router.patch('/:productId', productController.product_updated);
 
 /**
  * @method: Delete
@@ -37,7 +35,7 @@ router.patch("/:productId", productController.product_updated);
  * @url : http://localhost:3001/products/:productId
  */
 
-router.delete("/:productId", productController.product_deleted);
+// router.delete('/:productId', productController.product_deleted);
 
 /**
  * @method: Post
@@ -45,18 +43,16 @@ router.delete("/:productId", productController.product_deleted);
  * @url : http://localhost:3001/products/
  */
 
-router.post(
-  "/",
-
-  upload.single("productImage"),
-  productController.product_created
-);
+// router.post(
+//   '/',
+//
+//   upload.single('productImage'),
+//   productController.product_created,
+// );
 
 /**
  * @method : Get
  * @description: get products by categories
  * @url : http://localhost:3001/products/categories
  */
-router.post("/cat", productController.product_getBycategory);
-
-module.exports = router;
+// router.post('/cat', productController.product_getBycategory);

@@ -1,7 +1,8 @@
-const express = require("express");
-const router = express.Router();
-const ordersController = require("../controllers/order");
-const checkauth = require("../middleware/checkauth");
+import express from 'express';
+
+export const orderRouter = express.Router();
+// const ordersController = require('../controllers/order');
+// const checkauth = require('../middleware/checkauth');
 //const checkAuth = require("../middleware/checkauth");
 
 /**
@@ -10,6 +11,4 @@ const checkauth = require("../middleware/checkauth");
  * @url:http://localhost:3001/basket/:userId
  */
 // router.use()
-router.post("/make", ordersController.makeOrder);
-
-module.exports = router;
+// router.post("/make", ordersController.makeOrder);

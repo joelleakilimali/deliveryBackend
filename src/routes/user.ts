@@ -1,28 +1,22 @@
 import express from 'express';
-import User from '../models/user';
-import Basket from '../controllers/basket';
-import mongoose from 'mongoose';
+import { User } from '../models/user';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
-import checkauth from '../middleware/checkauth';
+import { validator } from '../validator';
+import { createUserSchema } from '../validator/schemas/auth';
 
-const router = express.Router();
-router.post('/', (req, res, next) => {
+export const userRouter = express.Router();
+userRouter.post('/', validator.body(createUserSchema), (req, res, next) => {
   User.findOne({ email: req.body.email })
     .exec()
     .then((user) => {
       if (user) {
-        console.log('this email adress exist ');
-        return res.status(409).json({ message: 'Email adress already used' });
+        console.log('this email address exist ');
+        return res.status(409).json({ message: 'Email address already used' });
       } else {
         const user = new User({
-          _id: new mongoose.Types.ObjectId(),
-          email: req.body.email,
-          telephone: req.body.telephone,
-          noms: req.body.noms,
-          prenom: req.body.prenom,
-          adresse: req.body.adresse,
-          password: bcrypt.hashSync(req.body.password, 8),
+          ...req.body,
+          password: bcrypt.hashSync(req.body.password, 10),
         });
         console.log(user);
         user
@@ -45,12 +39,12 @@ router.post('/', (req, res, next) => {
             res.status(500).json({ error: err });
           });
         const theUser = User.findOne({ email: req.body.email });
-        console.log('id :', theUser.id);
+        // console.log('id :', theUser.id);
       }
     });
 });
 
-router.post('/login', (req, res, next) => {
+userRouter.post('/login', (req, res, next) => {
   User.findOne({ email: req.body.email })
     .exec()
     .then((user) => {
@@ -74,7 +68,7 @@ router.post('/login', (req, res, next) => {
             email: user.email,
             _id: user._id,
           },
-          process.env.TOKEN,
+          process.env.TOKEN as string,
           {
             expiresIn: '1h',
           },
@@ -90,8 +84,8 @@ router.post('/login', (req, res, next) => {
     });
 });
 
-router.delete('/:userId', (req, res, next) => {
-  User.remove({ _id: req.params.id })
+userRouter.delete('/:userId', (req, res, next) => {
+  User.remove({ _id: (req.params as any).id })
     .exec()
     .then((result) => {
       res.status(200).json({ message: 'user deleted' });
@@ -100,7 +94,7 @@ router.delete('/:userId', (req, res, next) => {
       res.status(400).json({ error: err });
     });
 });
-router.get('/', (req, res, next) => {
+userRouter.get('/', (req, res, next) => {
   User.find()
     .exec()
     .then((users) => {
@@ -110,7 +104,7 @@ router.get('/', (req, res, next) => {
       res.status(400).json({ error: err });
     });
 });
-router.get('/:id', (req, res, next) => {
+userRouter.get('/:id', (req, res, next) => {
   User.findById(req.params.id)
     .exec()
     .then((users) => {
@@ -120,5 +114,3 @@ router.get('/:id', (req, res, next) => {
       res.status(400).json({ error: err });
     });
 });
-
-module.exports = router;

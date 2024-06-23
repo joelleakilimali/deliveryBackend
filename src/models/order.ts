@@ -2,7 +2,6 @@ import mongoose from 'mongoose';
 
 const orderSchema = new mongoose.Schema(
   {
-    _id: mongoose.Schema.Types.ObjectId,
     shortId: String,
     userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
     marketId: { type: mongoose.Schema.Types.ObjectId, ref: 'Market' },
